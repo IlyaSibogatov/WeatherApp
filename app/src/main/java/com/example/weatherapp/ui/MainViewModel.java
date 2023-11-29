@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.CompletableObserver;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -127,7 +128,7 @@ public class MainViewModel extends ViewModel {
     public void checkLatestData() {
         repository.getCurrentWeather()
                 .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.trampoline())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe( data -> {
                     System.out.println("DATA ---> " + data);
                     if (data.isEmpty()) setVisibility(ERROR);
