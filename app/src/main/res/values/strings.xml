@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+
+    <string name="location_label">Местоположение: %1$s </string>
+    <string name="temp_label">%1$s°C / ощущается как %2$s°C</string>
+    <string name="small_temp_label">%1$s°C</string>
+    <string name="uv_label">УФ: %1$s</string>
+    <string name="humidity_label">Влажность: %1$s</string>
+    <string name="wind_label">%1$s км/ч, %2$s</string>
+    <string name="small_wind_label">%1$s км/ч</string>
+    <string name="pressure_label">%1$s мБар</string>
+    <string name="main_error_label">Произошла ошибка. Проверьте разрешения и отслеживание геолокации.</string>
+
+</resources>
