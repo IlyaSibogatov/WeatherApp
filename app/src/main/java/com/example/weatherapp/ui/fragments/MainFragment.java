@@ -6,6 +6,7 @@ import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.LOADING;
 import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.SHOW_LATEST;
 import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.SUCCESS;
 import static com.example.weatherapp.utils.Ext.formatedDate;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -24,22 +26,25 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.weatherapp.utils.Ext;
 import com.example.weatherapp.R;
-import com.example.weatherapp.ui.viewmodels.MainViewModel;
-import com.example.weatherapp.ui.adapters.ForecastAdapter;
 import com.example.weatherapp.data.database.entities.CurrentWeatherEntity;
 import com.example.weatherapp.data.database.entities.ForecastEntity;
 import com.example.weatherapp.databinding.FragmentMainBinding;
+import com.example.weatherapp.ui.adapters.ForecastAdapter;
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
+import com.example.weatherapp.utils.Ext;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -168,7 +173,10 @@ public class MainFragment extends Fragment {
 
     private void getLastLocation() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED
+        ) {
             locationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
@@ -190,7 +198,9 @@ public class MainFragment extends Fragment {
 
     private void askPermissions() {
         requestPermissions(
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                REQUEST_CODE
         );
     }
 
@@ -198,7 +208,9 @@ public class MainFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults.length > 0) {
+            if ((grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                    grantResults[1] == PackageManager.PERMISSION_GRANTED
+            ) && grantResults.length > 0) {
                 getLastLocation();
             } else viewModel.checkLatestData();
         }
