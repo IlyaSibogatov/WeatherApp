@@ -1,7 +1,6 @@
-package com.example.weatherapp.adapters;
+package com.example.weatherapp.ui.adapters;
 
-import static com.example.weatherapp.Ext.smallFormatedDate;
-
+import static com.example.weatherapp.utils.Ext.smallFormatedDate;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;

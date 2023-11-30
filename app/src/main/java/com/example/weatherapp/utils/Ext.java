@@ -1,4 +1,4 @@
-package com.example.weatherapp;
+package com.example.weatherapp.utils;
 
 import android.annotation.SuppressLint;
 
@@ -9,10 +9,14 @@ import java.util.Locale;
 
 public class Ext {
 
-    public static final String API_KEY = "INSERT_YOUR_API_KEY";
+    public static final String API_KEY = "3bc20e45e50441a185c175726232711";
     public static final String BASE_URL = "http://api.weatherapi.com/v1/";
-
     public static final int REQUEST_CODE = 100;
+
+    public static class WeatherRequest {
+        public String lang = "ru";
+        public String daysCount = "5";
+    }
 
     public enum WEATHER_STATUS{
         ERROR, SUCCESS, LOADING, SHOW_LATEST

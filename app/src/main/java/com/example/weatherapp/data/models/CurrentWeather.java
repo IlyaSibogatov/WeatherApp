@@ -1,7 +1,6 @@
 package com.example.weatherapp.data.models;
 
 public class CurrentWeather {
-
     public Condition condition;
     public Double temp_c;
     public Double feelslike_c;

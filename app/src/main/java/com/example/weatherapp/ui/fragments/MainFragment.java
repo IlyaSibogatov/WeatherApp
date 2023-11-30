@@ -1,11 +1,11 @@
-package com.example.weatherapp.ui;
+package com.example.weatherapp.ui.fragments;
 
-import static com.example.weatherapp.Ext.REQUEST_CODE;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.ERROR;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.LOADING;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.SHOW_LATEST;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.SUCCESS;
-import static com.example.weatherapp.Ext.formatedDate;
+import static com.example.weatherapp.utils.Ext.REQUEST_CODE;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.ERROR;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.LOADING;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.SHOW_LATEST;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.SUCCESS;
+import static com.example.weatherapp.utils.Ext.formatedDate;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -27,9 +27,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.weatherapp.Ext;
+import com.example.weatherapp.utils.Ext;
 import com.example.weatherapp.R;
-import com.example.weatherapp.adapters.ForecastAdapter;
+import com.example.weatherapp.ui.viewmodels.MainViewModel;
+import com.example.weatherapp.ui.adapters.ForecastAdapter;
 import com.example.weatherapp.data.database.entities.CurrentWeatherEntity;
 import com.example.weatherapp.data.database.entities.ForecastEntity;
 import com.example.weatherapp.databinding.FragmentMainBinding;
@@ -46,9 +47,7 @@ public class MainFragment extends Fragment {
     private MainViewModel viewModel;
     private FragmentMainBinding binding;
     private ForecastAdapter forecastAdapter;
-
     private FusedLocationProviderClient locationClient;
-
     private Context context;
 
     @Nullable
@@ -65,15 +64,11 @@ public class MainFragment extends Fragment {
         forecastAdapter = new ForecastAdapter();
         locationClient = LocationServices.getFusedLocationProviderClient(context);
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
-
-
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED) {
             askPermissions();
         }
-
         binding.forecastRv.setAdapter(forecastAdapter);
-
         setObservables();
     }
 
@@ -104,8 +99,6 @@ public class MainFragment extends Fragment {
         viewModel.weatherData.observe(getViewLifecycleOwner(), new Observer<CurrentWeatherEntity>() {
                     @Override
                     public void onChanged(CurrentWeatherEntity data) {
-
-                        //Top card
                         binding.currentLocation.setText(
                                 getResources()
                                         .getString(
@@ -130,8 +123,6 @@ public class MainFragment extends Fragment {
                         binding.lastUpdateText.setText(
                                 formatedDate(data.date)
                         );
-
-                        //Other cards
                         binding.ultravioletText.setText(getResources().getString(
                                         R.string.uv_label,
                                         data.uv_c.toString()
@@ -153,8 +144,6 @@ public class MainFragment extends Fragment {
                                         data.pressure.toString()
                                 )
                         );
-
-                        //Rv
                         LinearLayoutManager manager = new LinearLayoutManager(context) {
                             @Override
                             public boolean canScrollVertically() {

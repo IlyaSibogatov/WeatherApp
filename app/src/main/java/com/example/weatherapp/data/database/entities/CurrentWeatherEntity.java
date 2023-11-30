@@ -20,7 +20,6 @@ public class CurrentWeatherEntity {
     @PrimaryKey @NotNull
     @ColumnInfo(name = "date")
     public String date;
-
     @ColumnInfo(name = "uv_c")
     public Double uv_c;
     @ColumnInfo(name = "humidity")
@@ -31,7 +30,7 @@ public class CurrentWeatherEntity {
     public String wind_direction;
     @ColumnInfo(name = "pressure")
     public Double pressure;
-    public CurrentWeatherEntity() { }
+    public CurrentWeatherEntity() {}
     public CurrentWeatherEntity(
             String location, String icon, String text, Double temp_c, Double feelslike_c,
             String localtime, Double uv, Double humidity, Double wind_kph, String wind_dir,
