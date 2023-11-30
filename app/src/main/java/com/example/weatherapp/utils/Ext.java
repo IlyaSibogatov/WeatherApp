@@ -14,8 +14,8 @@ public class Ext {
     public static final int REQUEST_CODE = 100;
 
     public static class WeatherRequest {
-        public String lang = "ru";
-        public String daysCount = "5";
+        public static String lang = "ru";
+        public static String daysCount = "5";
     }
 
     public enum WEATHER_STATUS{
