@@ -1,6 +1,6 @@
 package com.example.weatherapp.di;
 
-import static com.example.weatherapp.Ext.BASE_URL;
+import static com.example.weatherapp.utils.Ext.BASE_URL;
 import android.content.Context;
 import androidx.room.Room;
 import com.example.weatherapp.data.database.MyDatabase;

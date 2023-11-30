@@ -9,11 +9,14 @@ import io.reactivex.rxjava3.core.Observable;
 
 public interface WeatherRepository {
     Completable insertCurrent(CurrentWeatherEntity current);
+
     Completable insertForecasts(List<ForecastEntity> forecastList);
 
     Observable<List<CurrentWeatherEntity>> getCurrentWeather();
 
     Observable<List<ForecastEntity>> getForecasts();
+
     Completable removeCurrent();
+
     Completable removeForecasts();
 }

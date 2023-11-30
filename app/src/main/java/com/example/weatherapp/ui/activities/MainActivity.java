@@ -1,4 +1,4 @@
-package com.example.weatherapp.activities;
+package com.example.weatherapp.ui.activities;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;

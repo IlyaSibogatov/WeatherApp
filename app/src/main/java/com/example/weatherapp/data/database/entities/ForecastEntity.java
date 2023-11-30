@@ -18,9 +18,7 @@ public class ForecastEntity {
     public Double maxWind;
     @ColumnInfo(name = "icon")
     public String icon;
-
     public ForecastEntity() { }
-
     public ForecastEntity(
             String date,
             Double avgtemp_c,

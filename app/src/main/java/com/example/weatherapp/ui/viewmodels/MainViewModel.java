@@ -1,8 +1,8 @@
-package com.example.weatherapp.ui;
+package com.example.weatherapp.ui.viewmodels;
 
-import static com.example.weatherapp.Ext.API_KEY;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.ERROR;
-import static com.example.weatherapp.Ext.WEATHER_STATUS.SHOW_LATEST;
+import static com.example.weatherapp.utils.Ext.API_KEY;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.ERROR;
+import static com.example.weatherapp.utils.Ext.WEATHER_STATUS.SHOW_LATEST;
 
 import android.annotation.SuppressLint;
 
@@ -10,7 +10,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.weatherapp.Ext;
+import com.example.weatherapp.utils.Ext;
 import com.example.weatherapp.data.database.entities.CurrentWeatherEntity;
 import com.example.weatherapp.data.database.entities.ForecastEntity;
 import com.example.weatherapp.data.repositories.WeatherRepository;
@@ -23,24 +23,19 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.CompletableObserver;
-import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 @HiltViewModel
 public class MainViewModel extends ViewModel {
-
     private final WeatherService service;
-
     private final WeatherRepository repository;
-
     private final MutableLiveData<CurrentWeatherEntity> _weatherData = new MutableLiveData<>();
     public LiveData<CurrentWeatherEntity> weatherData = _weatherData;
     private final MutableLiveData<List<ForecastEntity>> _forecastsData = new MutableLiveData<>();
     public LiveData<List<ForecastEntity>> forecastsData = _forecastsData;
     private final MutableLiveData<Ext.WEATHER_STATUS> _showMain = new MutableLiveData<>(Ext.WEATHER_STATUS.LOADING);
     public LiveData<Ext.WEATHER_STATUS> showMain = _showMain;
+    private final Ext.WeatherRequest weatherRequest = new Ext.WeatherRequest();
 
     @Inject
     public MainViewModel(WeatherService service, WeatherRepository repository) {
@@ -51,7 +46,10 @@ public class MainViewModel extends ViewModel {
     @SuppressLint("CheckResult")
     public void getCurrent(Double lat, Double lon) {
         service.weatherForecast(
-                        lat.toString() + "," + lon.toString(), API_KEY, "ru", "5"
+                        lat.toString() + "," + lon.toString(),
+                        API_KEY,
+                        weatherRequest.lang,
+                        weatherRequest.daysCount
                 )
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
@@ -73,24 +71,7 @@ public class MainViewModel extends ViewModel {
                                     it.current.pressure_mb
                             );
                             _weatherData.postValue(currentEntity);
-                            repository.insertCurrent(currentEntity)
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(new CompletableObserver() {
-                                        @Override
-                                        public void onSubscribe(@NonNull Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(@NonNull Throwable e) {
-
-                                        }
-                                    });
+                            repository.insertCurrent(currentEntity);
 
                             List<ForecastEntity> forecasts = it.forecast.forecastday.stream().map(forecastday ->
                                     new ForecastEntity(
@@ -103,23 +84,7 @@ public class MainViewModel extends ViewModel {
                             ).collect(Collectors.toList());
                             _forecastsData.postValue(forecasts);
                             repository.insertForecasts(forecasts)
-                                    .subscribeOn(Schedulers.io())
-                                    .subscribe(new CompletableObserver() {
-                                        @Override
-                                        public void onSubscribe(@NonNull Disposable d) {
-
-                                        }
-
-                                        @Override
-                                        public void onComplete() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(@NonNull Throwable e) {
-
-                                        }
-                                    });
+                                    .subscribeOn(Schedulers.io());
                         }
                 );
     }
@@ -130,7 +95,6 @@ public class MainViewModel extends ViewModel {
                 .observeOn(Schedulers.io())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe( data -> {
-                    System.out.println("DATA ---> " + data);
                     if (data.isEmpty()) setVisibility(ERROR);
                     else {
                         _weatherData.postValue(data.get(0));
