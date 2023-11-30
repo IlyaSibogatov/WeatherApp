@@ -35,7 +35,6 @@ public class MainViewModel extends ViewModel {
     public LiveData<List<ForecastEntity>> forecastsData = _forecastsData;
     private final MutableLiveData<Ext.WEATHER_STATUS> _showMain = new MutableLiveData<>(Ext.WEATHER_STATUS.LOADING);
     public LiveData<Ext.WEATHER_STATUS> showMain = _showMain;
-    private final Ext.WeatherRequest weatherRequest = new Ext.WeatherRequest();
 
     @Inject
     public MainViewModel(WeatherService service, WeatherRepository repository) {
@@ -48,8 +47,8 @@ public class MainViewModel extends ViewModel {
         service.weatherForecast(
                         lat.toString() + "," + lon.toString(),
                         API_KEY,
-                        weatherRequest.lang,
-                        weatherRequest.daysCount
+                        Ext.WeatherRequest.lang,
+                        Ext.WeatherRequest.daysCount
                 )
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.computation())
